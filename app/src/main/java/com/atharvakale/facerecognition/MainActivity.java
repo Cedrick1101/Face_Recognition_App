@@ -41,6 +41,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.mlkit.vision.common.InputImage;
@@ -86,8 +89,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     FaceDetector detector;
+    FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     PreviewView previewView;
@@ -121,8 +127,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         registered=readFromSP(); //Load saved faces from memory when app starts
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
+        database=FirebaseDatabase.getInstance();
+        reference=database.getReference();
         face_preview =findViewById(R.id.imageView);
         reco_name =findViewById(R.id.textView);
         preview_info =findViewById(R.id.textView2);
@@ -971,6 +981,7 @@ public class MainActivity extends AppCompatActivity {
         //System.out.println("Input josn"+jsonString.toString());
         editor.apply();
         Toast.makeText(context, "Recognitions Saved", Toast.LENGTH_SHORT).show();
+
     }
 
     //Load Faces from Shared Preferences.Json String to Recognition object
@@ -1092,5 +1103,9 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }
 
